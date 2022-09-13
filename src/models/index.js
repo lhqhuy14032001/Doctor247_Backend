@@ -1,5 +1,7 @@
 'use strict';
 
+require('dotenv').config(); // package dotenv de su dung cau lenh => process.env.EX
+
 const fs = require('fs');
 const path = require('path');
 const Sequelize = require('sequelize');
