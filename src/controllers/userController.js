@@ -71,7 +71,7 @@ let handleUpdatetUser = async (req, res) => {
     });
 }
 let handleDeletetUser = async (req, res) => {
-    let id = req.query.id;
+    let id = req.body.id;
     if (!id) {
         return res.status(500).json({
             errCode: 1,

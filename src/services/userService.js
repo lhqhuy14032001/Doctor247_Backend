@@ -113,7 +113,7 @@ let createNewUser = (data) => {
                     firstName: data.firstName,
                     lastName: data.lastName,
                     address: data.address,
-                    phonenumber: data.phoneNumber,
+                    phonenumber: data.phonenumber,
                     gender: data.sex === "1" ? true : false,
                     roleId: data.roleId === "1" ? "1" : "2"
                 }
@@ -159,7 +159,7 @@ let updateUser = (data) => {
                     id: data.id
                 },
                 raw: false
-            })
+            })              
             if (user) {
                 user.email = data.email;
                 user.firstName = data.firstName;
