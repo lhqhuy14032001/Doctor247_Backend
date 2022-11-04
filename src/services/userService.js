@@ -21,7 +21,7 @@ let handleUserLogin = (email, password) => {
                 //user existed
                 //compare password
                 let user = await db.User.findOne({
-                    attributes: ['email', 'password', 'roleId'],
+                    attributes: ['email', 'password', 'roleId', 'firstName', 'lastName'],
                     where: { email: email },
                     raw: true
                 });
@@ -159,7 +159,7 @@ let updateUser = (data) => {
                     id: data.id
                 },
                 raw: false
-            })              
+            })
             if (user) {
                 user.email = data.email;
                 user.firstName = data.firstName;
@@ -180,10 +180,41 @@ let updateUser = (data) => {
     }
     )
 }
+
+let getAllCode = (type) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            if (!type) {
+                resolve({
+                    errCode: 1,
+                    errMessage: ' Missing require parameter!'
+                })
+            } else {
+                let res = {}
+                let allcode = await db.Allcodes.findAll({
+                    where: { type: type }
+                });
+                res.data = allcode;
+                res.errCode = 0;
+                resolve(res);
+            }
+        } catch (error) {
+            reject(error);
+        }
+    })
+}
+
+
+
+
+
+
+
 module.exports = {
     handleUserLogin: handleUserLogin,
     getAllUsers: getAllUsers,
     createNewUser: createNewUser,
     updateUser: updateUser,
-    deleteUser: deleteUser
+    deleteUser: deleteUser,
+    getAllCode: getAllCode
 }
