@@ -8,10 +8,10 @@ module.exports = {
                 primaryKey: true,
                 type: Sequelize.INTEGER
             },
-            key: {
+            type: {
                 type: Sequelize.STRING
             },
-            type: {
+            keyMap: {
                 type: Sequelize.STRING
             },
             valueEn: {
@@ -30,5 +30,5 @@ module.exports = {
             }
         });
     },
-    down: async (queryInterface, Sequelize) => {}
+    down: async (queryInterface, Sequelize) => { }
 };

@@ -2,9 +2,10 @@
   "development": {
     "username": "root",
     "password": "root",
-    "database": "bookingcare_test",
+    "database": "doctorcare",
     "host": "127.0.0.1",
     "dialect": "mysql",
+    "port": 8889,
     "logging": false,
     "query": {
       "raw": true

@@ -12,7 +12,7 @@ let app = express();
 app.use(function (req, res, next) {
 
     // Website you wish to allow to connect
-    res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000');
+    res.setHeader('Access-Control-Allow-Origin', process.env.URL_REACT);
 
     // Request methods you wish to allow
     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
@@ -30,8 +30,11 @@ app.use(function (req, res, next) {
 
 //config app
 
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json({ limit: '50mb' }));
+app.use(bodyParser.urlencoded({
+    extended: true,
+    limit: '50mb'
+}));
 viewEngine(app)
 initWebRoutes(app)
 
@@ -40,5 +43,5 @@ connectDB()
 let port = process.env.PORT || 6969;
 
 app.listen(port, () => {
-    console.log("BE NodeJS is running on the port" + port)
+    console.log("BE NodeJS is running on the port " + port)
 })

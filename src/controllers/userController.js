@@ -75,13 +75,13 @@ let handleDeletetUser = async (req, res) => {
     if (!id) {
         return res.status(500).json({
             errCode: 1,
-            errMessage: 'Missing parameter !'
+            Message: 'Missing parameter !'
         })
     }
     let message = await userServive.deleteUser(id);
     return res.status(200).json({
         errCode: message.errCode,
-        errMessage: message.message
+        Message: message.message
     })
 }
 

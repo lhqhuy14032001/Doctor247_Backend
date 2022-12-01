@@ -114,12 +114,14 @@ let createNewUser = (data) => {
                     lastName: data.lastName,
                     address: data.address,
                     phonenumber: data.phonenumber,
-                    gender: data.sex === "1" ? true : false,
-                    roleId: data.roleId === "1" ? "1" : "2"
+                    gender: data.gender,
+                    roleId: data.roleId,
+                    positionId: data.positionId,
+                    image: data.avatar
                 }
                 await db.User.create(userInfor)
                 message.errCode = 0;
-                message.errMessage = ''
+                message.errMessage = 'Create user success !!!'
             }
             resolve(message);
         } catch (error) {
@@ -152,6 +154,12 @@ let deleteUser = (id) => {
 }
 let updateUser = (data) => {
     return new Promise(async (resolve, reject) => {
+        if (!data.id || !data.roleId || !data.positionId || !data.gender) {
+            resolve({
+                errCode: 2,
+                errMessage: 'Missing required parameters'
+            })
+        }
         try {
             let userData = [];
             let user = await db.User.findOne({
@@ -161,11 +169,16 @@ let updateUser = (data) => {
                 raw: false
             })
             if (user) {
-                user.email = data.email;
                 user.firstName = data.firstName;
                 user.lastName = data.lastName;
                 user.address = data.address;
+                user.roleId = data.roleId;
+                user.positionId = data.positionId;
+                user.gender = data.gender;
                 user.phonenumber = data.phonenumber;
+                if (data.avatar) {
+                    user.image = data.avatar
+                }
                 await user.save();
                 userData.errCode = 0;
                 userData.errorMessage = 'Update user succeed!';
@@ -191,7 +204,7 @@ let getAllCode = (type) => {
                 })
             } else {
                 let res = {}
-                let allcode = await db.Allcodes.findAll({
+                let allcode = await db.ALLCODES.findAll({
                     where: { type: type }
                 });
                 res.data = allcode;
