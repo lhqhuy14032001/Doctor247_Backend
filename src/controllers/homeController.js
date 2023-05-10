@@ -1,84 +1,77 @@
-import { json } from 'body-parser'
-import db from '../models/index'
-import CRUD from "../services/CRUDService"
+import db from '../models/index.js';
+import CRUDService from '../services/CRUDService.js';
 let getHomePage = async (req, res) => {
     try {
-        let data = await db.User.findAll()
-        console.log('---------------')
-        console.log(data)
-        console.log('---------------')
-        return res.render("homepage.ejs", { data: JSON.stringify(data) })
+        let data = await db.User.findAll();
+        return res.render('homepage.ejs', {
+            data: JSON.stringify(data)
+        });
     } catch (e) {
         console.log(e);
     }
 }
 
-//render view to take data to create a new user
+let getAboutPage = (req, res) => {
+    return res.render('test/about.ejs');
+}
 let getCRUD = (req, res) => {
-    return res.render("crud.ejs");
+    return res.render('crud.ejs');
 }
-
-//insert data to db -> create acc
 let postCRUD = async (req, res) => {
-    let data = req.body;
-    let msg = await CRUD.createNewUser(data);
-    if (msg) {
-        res.redirect('/get-crud')
+    let message = await CRUDService.createNewUser(req.body);
+    console.log(message);
+    return res.send('post');
+
+}
+let displayGetCRUD = async (req, res) => {
+    let data = await CRUDService.getAllUsers();
+    return res.render('displayCRUD.ejs', {
+        dataTable: data,
+    });
+}
+let getEditCRUD = async (req, res) => {
+    let userId = req.query.id;
+    if (userId) {
+        let userData = await CRUDService.getUserInfoById(userId);
+        return res.render('editCRUD.ejs', {
+            user: userData
+        });
+
     } else {
-        res.redirect('/crud')
-    }
-    return;
-}
-
-//display user list
-let displayCRUD = async (req, res) => {
-    let data = await CRUD.getALLUser();
-    return res.render('displayCRUD', {
-        user: data
-    })
-}
-
-//display user infor to edit
-let editCRUD = async (req, res) => {
-    let id = req.query.id;
-    if (id) {
-        let user = await CRUD.getUser(id);
-        if (user) {
-            res.render('editCRUD', {
-                user: user
-            });
-        }
-    }
-    else {
-        res.send('User not found !!!');
+        return res.send('ERROR_NAME_NOT_FOUND');
     }
 
-    return;
-}
 
-//update user infor from view to db
+
+}
 let putCRUD = async (req, res) => {
     let data = req.body;
-    await CRUD.updateUser(data);
-    return res.redirect('/get-crud');
+    let allUsers = await CRUDService.updateUserData(data);
+    return res.render('displayCRUD.ejs', {
+        dataTable: allUsers
+    });
+
 }
+
 
 let deleteCRUD = async (req, res) => {
     let id = req.query.id;
     if (id) {
-        let msg = await CRUD.deleteUser(id);
+        await CRUDService.deleteUserByID(id);
+        return res.send('Deleted');
     }
-    return res.redirect('/get-crud')
+    else {
+        return res.send('User not found!');
+    }
+
 }
-
-
-
-module.exports = {
-    getHomePage,
-    getCRUD,
-    postCRUD,
-    displayCRUD,
-    deleteCRUD,
-    editCRUD,
-    putCRUD
+export default {
+    getHomePage: getHomePage,
+    getAboutPage: getAboutPage,
+    getCRUD: getCRUD,
+    postCRUD: postCRUD,
+    displayGetCRUD: displayGetCRUD,
+    getEditCRUD: getEditCRUD,
+    putCRUD: putCRUD,
+    deleteCRUD: deleteCRUD,
 };

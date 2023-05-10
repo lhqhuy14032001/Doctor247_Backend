@@ -1,7 +1,5 @@
 'use strict';
-
 require('dotenv').config(); // package dotenv de su dung cau lenh => process.env.EX
-
 const fs = require('fs');
 const path = require('path');
 const Sequelize = require('sequelize');
@@ -16,7 +14,6 @@ if (config.use_env_variable) {
 } else {
   sequelize = new Sequelize(config.database, config.username, config.password, config);
 }
-
 fs
   .readdirSync(__dirname)
   .filter(file => {
@@ -24,6 +21,7 @@ fs
   })
   .forEach(file => {
     const model = require(path.join(__dirname, file))(sequelize, Sequelize.DataTypes);
+    // const model = sequelize.import(path.join(__dirname, file))
     db[model.name] = model;
   });
 

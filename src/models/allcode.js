@@ -1,20 +1,30 @@
 'use strict';
-const { Model } = require('sequelize');
+import { Model } from 'sequelize';
 module.exports = (sequelize, DataTypes) => {
-    class ALLCODES extends Model {
+    class Allcode extends Model {
+        /**
+         * Helper method for defining associations.
+         * This method is not a part of Sequelize lifecycle.
+         * The `models/index` file will call this method automatically.
+         */
         static associate(models) {
-            ALLCODES.hasMany(models.User, { foreignKey: 'positionId', as: 'positionData' })
-            ALLCODES.hasMany(models.User, { foreignKey: 'gender', as: 'genderData' })
+            Allcode.hasMany(models.User, { foreignKey: 'positionId', as: 'positionData' })
+            Allcode.hasMany(models.User, { foreignKey: 'gender', as: 'genderData' })
+            Allcode.hasMany(models.Schedule, { foreignKey: 'timeType', as: 'timeTypeData' })
+            Allcode.hasMany(models.Doctor_Infor, { foreignKey: 'priceId', as: 'priceTypeData' })
+            Allcode.hasMany(models.Doctor_Infor, { foreignKey: 'provinceId', as: 'provinceTypeData' })
+            Allcode.hasMany(models.Doctor_Infor, { foreignKey: 'paymentId', as: 'paymentTypeData' })
+            Allcode.hasMany(models.Booking, { foreignKey: 'timeType', as: 'timeTypeDataPatient' })
         }
     };
-    ALLCODES.init({
-        type: DataTypes.STRING,
+    Allcode.init({
         keyMap: DataTypes.STRING,
+        type: DataTypes.STRING,
         valueEn: DataTypes.STRING,
-        valueVi: DataTypes.STRING,
+        valueVi: DataTypes.STRING
     }, {
         sequelize,
-        modelName: 'ALLCODES',
+        modelName: 'Allcode',
     });
-    return ALLCODES;
+    return Allcode;
 };

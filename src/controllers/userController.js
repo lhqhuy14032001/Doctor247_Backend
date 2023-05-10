@@ -1,15 +1,14 @@
-import userServive from "../services/userService"
-
+import userService from "../services/userService";
 let handleLogin = async (req, res) => {
     let email = req.body.email;
     let password = req.body.password;
     if (!email || !password) {
         return res.status(500).json({
             errCode: 1,
-            message: 'Missing inputs prams'
+            message: 'Missing input parameters!'
         })
     }
-    let userData = await userServive.handleUserLogin(email, password);
+    let userData = await userService.handleUserLogin(email, password);
     return res.status(200).json({
         errCode: userData.errCode,
         message: userData.errMessage,
@@ -18,94 +17,57 @@ let handleLogin = async (req, res) => {
 }
 
 let handleGetAllUsers = async (req, res) => {
-    let id = req.query.id; // ALL or id
+    let id = req.query.id;
     if (!id) {
-        return res.status(500).json({
+        return res.status(200).json({
             errCode: 1,
-            errMessage: 'Missing parameters !!!',
+            errMessage: 'Missing required parameters!',
             users: []
-        });
+        })
     }
-    let users = await userServive.getAllUsers(id);
+    let users = await userService.getAllUsers(id);
     return res.status(200).json({
         errCode: 0,
         errMessage: 'OK',
         users
-    });
-}
-
-let handleCreateNewUser = async (req, res) => {
-    let data = req.body;
-    let message = await userServive.createNewUser(data);
-    let resMessage = {
-        errCode: message.errCode
-    };
-    if (message !== 0) {
-        resMessage.errMessage = message.errMessage
-    }
-    return res.status(200).json(
-        resMessage
-    )
-}
-
-
-let handleUpdatetUser = async (req, res) => {
-    let data = req.body;
-    let id = req.body.id;
-    if (!id) {
-        return res.status(400).json({
-            errCode: 1,
-            errMessage: 'Missing parameter!'
-        })
-    }
-    let message = await userServive.updateUser(data);
-    if (message.errCode === 0) {
-        return res.status(200).json({
-            errCode: message.errCode,
-            errMessage: message.errorMessage
-        })
-    }
-    return res.status(500).json({
-        errCode: message.errCode,
-        errMessage: message.errMessage
-    });
-}
-let handleDeletetUser = async (req, res) => {
-    let id = req.body.id;
-    if (!id) {
-        return res.status(500).json({
-            errCode: 1,
-            Message: 'Missing parameter !'
-        })
-    }
-    let message = await userServive.deleteUser(id);
-    return res.status(200).json({
-        errCode: message.errCode,
-        Message: message.message
     })
 }
-
+let handleCreateNewUser = async (req, res) => {
+    let data = req.body;
+    let message = await userService.createNewUser(data);
+    return res.status(200).json(message);
+}
+let handleDeleteUser = async (req, res) => {
+    if (!req.body.id) {
+        return res.status(200).json({
+            errCode: 1,
+            errMessage: "Missing required parameters!"
+        })
+    }
+    let message = await userService.deleteUser(req.body.id);
+    return res.status(200).json(message);
+}
+let handleEditUser = async (req, res) => {
+    let data = req.body;
+    let message = await userService.updateUserData(data);
+    return res.status(200).json(message);
+}
 let getAllCode = async (req, res) => {
     try {
-        let type = req.query.type;
-        let data = await userServive.getAllCode(type);
+        let data = await userService.getAllCodeService(req.query.type);
         return res.status(200).json(data);
-    } catch (error) {
-        return res.status(200).json(
-            {
-                errCode: -1,
-                errMessage: 'Error from server!'
-            }
-        )
+    } catch (e) {
+        return res.status(200).json({
+            errCode: -1,
+            errMessage: 'Error from server'
+        })
     }
 }
-
 module.exports = {
     handleLogin: handleLogin,
     handleGetAllUsers: handleGetAllUsers,
-    handleUpdatetUser: handleUpdatetUser,
     handleCreateNewUser: handleCreateNewUser,
-    handleUpdatetUser: handleUpdatetUser,
-    handleDeletetUser: handleDeletetUser,
+    handleDeleteUser: handleDeleteUser,
+    handleEditUser: handleEditUser,
     getAllCode: getAllCode
-} 
+}
